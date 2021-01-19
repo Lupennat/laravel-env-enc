@@ -1,0 +1,38 @@
+{
+    "name": "lupennat/laravel-env-enc",
+    "type": "library",
+    "description": "encrypt/decrypt laravel .env",
+    "keywords": [
+        "laravel",
+        "encrypt",
+        "decrypt",
+        "env",
+        "dim",
+        "hide"
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/Lupennat/laravel-env-enc",
+    "authors": [
+        {
+            "name": "Lupennat",
+            "email": "claudio.pennati@gmail.com",
+            "role": "Author"
+        }
+    ],
+    "require": {
+        "illuminate/encryption": "^5.5 || ^6.0 || ^7.0 || ^8.0",
+        "illuminate/support": "^5.5 || ^6.0 || ^7.0 || ^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Lupennat\\LaravelEnvEnc\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Lupennat\\LaravelEnvEnc\\Provider"
+            ]
+        }
+    }
+}
