@@ -2,7 +2,7 @@
 
 namespace Lupennat\LaravelEnvEnc\Console;
 
-use Illuminate\Support\File;
+use Illuminate\Support\Facades\File;
 use Illuminate\Console\Command;
 use Illuminate\Encryption\Encrypter;
 use Lupennat\LaravelEnvEnc\LaravelEnvEncException;
