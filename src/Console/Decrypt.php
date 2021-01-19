@@ -2,10 +2,9 @@
 
 namespace Lupennat\LaravelEnvEnc\Console;
 
-use Illuminate\Support\Facades\File;
 use Illuminate\Console\Command;
 use Illuminate\Encryption\Encrypter;
-use Lupennat\LaravelEnvEnc\LaravelEnvEncException;
+use Illuminate\Support\Facades\File;
 use Throwable;
 
 class Decrypt extends Command
@@ -14,33 +13,38 @@ class Decrypt extends Command
     protected $signature = 'lupennat:env-decrypt
     {environment? : environment to load}';
 
-    protected $description = 'decrypt file env using password';
+    protected $description = 'decrypt file env using key';
 
     public function handle()
     {
-        $environment = $this->argument('environment') || null;
+        $environment = $this->argument('environment');
         $filename = $environment ? ".env.$environment" : '.env';
 
         if (!File::exists(base_path("$filename.enc"))) {
-            throw new LaravelEnvEncException("File " . base_path("$filename.enc") . " not found.");
+            return $this->error("File " . base_path("$filename.enc") . " not found.");
         }
 
-        $password = $this->secret('Provide a password (min 8):');
+        $key = $this->secret('Provide a key:');
 
-        if (strlen($password) < 8) {
-            throw new LaravelEnvEncException("The Password must be at least 8 characters.");
-        }
+        $availableChipers = ['AES-128-CBC', 'AES-256-CBC'];
+
+        $chiper = $this->choice(
+            'What is key cheaper?',
+            $availableChipers,
+            array_search($this->laravel['config']['app.cipher'], $availableChipers)
+        );
 
         try {
             $content = File::get(base_path("$filename.enc"));
-            $decrypter = new Encrypter($password);
+            $decrypter = new Encrypter(base64_decode($key), $chiper);
             $decryptedContent = $decrypter->decrypt($content);
 
             File::put(base_path($filename), $decryptedContent);
 
-            $this->success("File " . base_path($filename) . " succesfully created!");
+            $this->info("File " . base_path($filename) . " succesfully created!");
         } catch (Throwable $e) {
-            return $this->error("File " . base_path($filename) . " not created!");
+            $this->error("File " . base_path($filename) . " not created!");
+            $this->error($e->getMessage());
         }
     }
 }
