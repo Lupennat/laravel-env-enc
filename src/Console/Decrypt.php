@@ -12,7 +12,7 @@ class Decrypt extends Command
 {
 
     protected $signature = 'lupennat:env-decrypt
-    {?environment : environment to load}';
+    {environment? : environment to load}';
 
     protected $description = 'decrypt file env using password';
 
