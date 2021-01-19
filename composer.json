@@ -31,7 +31,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Lupennat\\LaravelEnvEnc\\Provider"
+                "Lupennat\\LaravelEnvEnc\\LaravelEnvEncProvider"
             ]
         }
     }
