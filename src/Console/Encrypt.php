@@ -11,7 +11,7 @@ class Encrypt extends Command
 {
 
     protected $signature = 'lupennat:env-encrypt
-    {environment? : environment to load}';
+    {environment? : environment to load} {--K|key=} {--C|chiper=AES-256-CBC : AES-128-CBC or AES-256-CBC}';
 
     protected $description = 'encrypt file env using key';
 
@@ -24,15 +24,19 @@ class Encrypt extends Command
             return $this->error("File " . base_path($filename) . " not found.");
         }
 
-        $key = $this->secret('Provide a key:');
+        $key = $this->options()['key'] ?? $this->secret('Provide a key:');
 
         $availableChipers = ['AES-128-CBC', 'AES-256-CBC'];
 
-        $chiper = $this->choice(
+        $chiper = $this->options()['chiper'] ?? $this->choice(
             'What is key cheaper?',
             $availableChipers,
             array_search($this->laravel['config']['app.cipher'], $availableChipers)
         );
+
+        if(!in_array($chiper, $availableChipers)) {
+            return $this->error("Chiper '" . $chiper .  "' not valid.");
+        }
 
         $encrypter = new Encrypter(base64_decode($key), $chiper);
 
